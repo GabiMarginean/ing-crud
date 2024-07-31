@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ing-crud
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ing_crud
+    username: root
+    password: doyourthing
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  cloud:
+    gateway:
+      routes:
+        - id: ing-crud
+          uri: http://localhost:8081
+          predicates:
+            - Path=/example/**
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+jwt:
+  secret: mySecretKey
