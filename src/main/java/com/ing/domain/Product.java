@@ -101,7 +101,7 @@ public class Product {
                 productWarehouse.setProduct(null);
                 productWarehouse.setWarehouse(null);
             }
-        };
+        }
         return this;
     }
 

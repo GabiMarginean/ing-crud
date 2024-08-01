@@ -1,8 +1,6 @@
 package com.ing.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.ManyToOne;
 
 import java.io.Serializable;
 import java.util.Objects;

@@ -78,7 +78,6 @@ public class Warehouse {
                 productWarehouse.setWarehouse(null);
             }
         }
-        ;
         return this;
     }
 }
