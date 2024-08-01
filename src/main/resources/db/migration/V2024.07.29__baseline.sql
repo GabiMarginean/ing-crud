@@ -1,4 +1,4 @@
-CREATE TABLE user
+CREATE TABLE `user`
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
     username      VARCHAR(255),
@@ -34,7 +34,7 @@ CREATE TABLE product
     category_id   BIGINT,
     created       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES ProductCategory (id)
+    FOREIGN KEY (category_id) REFERENCES product_category (id)
 );
 
 CREATE TABLE product_warehouse
@@ -43,6 +43,6 @@ CREATE TABLE product_warehouse
     warehouse_id   BIGINT,
     quantity       BIGINT,
     PRIMARY KEY (product_id, warehouse_id),
-    FOREIGN KEY (product_id) REFERENCES Product (id),
-    FOREIGN KEY (warehouse_id) REFERENCES Warehouse (id)
+    FOREIGN KEY (product_id) REFERENCES product (id),
+    FOREIGN KEY (warehouse_id) REFERENCES warehouse (id)
 );
