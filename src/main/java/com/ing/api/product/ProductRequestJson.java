@@ -1,12 +1,8 @@
-package com.ing.api;
+package com.ing.api.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
-public class ProductResponseJson {
-
-    @JsonProperty("id")
-    private Long id;
+public class ProductRequestJson {
 
     @JsonProperty("name")
     private String name;
@@ -20,20 +16,11 @@ public class ProductResponseJson {
     @JsonProperty("category")
     private String category;
 
-    public Long getId() {
-        return id;
-    }
-
-    public ProductResponseJson setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
     public String getName() {
         return name;
     }
 
-    public ProductResponseJson setName(String name) {
+    public ProductRequestJson setName(String name) {
         this.name = name;
         return this;
     }
@@ -42,7 +29,7 @@ public class ProductResponseJson {
         return description;
     }
 
-    public ProductResponseJson setDescription(String description) {
+    public ProductRequestJson setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -51,7 +38,7 @@ public class ProductResponseJson {
         return price;
     }
 
-    public ProductResponseJson setPrice(Double price) {
+    public ProductRequestJson setPrice(Double price) {
         this.price = price;
         return this;
     }
@@ -60,7 +47,7 @@ public class ProductResponseJson {
         return category;
     }
 
-    public ProductResponseJson setCategory(String category) {
+    public ProductRequestJson setCategory(String category) {
         this.category = category;
         return this;
     }

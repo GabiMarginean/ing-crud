@@ -2,7 +2,7 @@ package com.ing.error;
 
 public enum ErrorCode {
 
-    PRODUCT_NOT_FOUND(1, "Product with id {0} does not exist"),
+    ENTITY_NOT_FOUND(1, "{0} with id {1} does not exist"),
     INVALID_CATEGORY(2, "Invalid product category: {0}"),
     UNKNOWN_ERROR(999, "An unknown error occurred");
 

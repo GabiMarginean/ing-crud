@@ -1,8 +1,8 @@
 package com.ing.service;
 
 import com.ing.TestBase;
-import com.ing.api.ProductListResponse;
-import com.ing.api.ProductResponseJson;
+import com.ing.api.product.ProductListResponseJson;
+import com.ing.api.product.ProductResponseJson;
 import com.ing.domain.Product;
 import com.ing.domain.ProductCategory;
 import com.ing.error.ErrorCode;
@@ -66,7 +66,7 @@ public class ProductServiceTest extends TestBase {
 
     @Test
     public void testGetAllProducts() {
-        ProductListResponse allProducts = productService.getAllProducts();
+        ProductListResponseJson allProducts = productService.getAllProducts();
 
         assertNotNull(allProducts);
         assertThat(allProducts.getProducts()).hasSize(1);
@@ -84,7 +84,7 @@ public class ProductServiceTest extends TestBase {
     @Test
     public void testGetOneProductInvalidId() {
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(MessageFormat.format(ErrorCode.PRODUCT_NOT_FOUND.getMessage(), INVALID_PRODUCT_ID));
+        thrown.expectMessage(MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), INVALID_PRODUCT_ID));
 
         ProductResponseJson product = productService.getProduct(INVALID_PRODUCT_ID);
 
@@ -119,7 +119,7 @@ public class ProductServiceTest extends TestBase {
     @Test
     public void testUpdateProductInvalidId() {
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(MessageFormat.format(ErrorCode.PRODUCT_NOT_FOUND.getMessage(), INVALID_PRODUCT_ID));
+        thrown.expectMessage(MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), INVALID_PRODUCT_ID));
 
         ProductResponseJson product = productService.updateProduct(getRequestJson(), INVALID_PRODUCT_ID);
     }
@@ -134,7 +134,7 @@ public class ProductServiceTest extends TestBase {
     @Test
     public void testDeleteProductInvalidId() {
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage(MessageFormat.format(ErrorCode.PRODUCT_NOT_FOUND.getMessage(), INVALID_PRODUCT_ID));
+        thrown.expectMessage(MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), INVALID_PRODUCT_ID));
 
         productService.deleteProduct(INVALID_PRODUCT_ID);
 

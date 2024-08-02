@@ -1,10 +1,12 @@
 package com.ing.controller;
 
-import com.ing.api.ProductListResponse;
-import com.ing.api.ProductRequestJson;
-import com.ing.api.ProductResponseJson;
+import com.ing.api.product.PriceUpdateRequestJson;
+import com.ing.api.product.ProductListResponseJson;
+import com.ing.api.product.ProductRequestJson;
+import com.ing.api.product.ProductResponseJson;
 import com.ing.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ProductListResponse getAllProducts() {
+    public ProductListResponseJson getAllProducts() {
         return productService.getAllProducts();
     }
 
@@ -31,7 +33,8 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public ProductResponseJson updateProduct(@PathVariable Long productId, @RequestBody ProductRequestJson productJson) {
+    public ProductResponseJson updateProduct(@PathVariable Long productId,
+                                             @RequestBody ProductRequestJson productJson) {
         return productService.updateProduct(productJson, productId);
     }
 
@@ -39,5 +42,12 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{productId}/price")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponseJson updateProductPrice(@PathVariable Long productId,
+                                                  @RequestBody PriceUpdateRequestJson priceUpdateRequest) {
+        return productService.updateProductPrice(productId, priceUpdateRequest);
     }
 }

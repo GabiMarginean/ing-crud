@@ -1,6 +1,6 @@
 package com.ing;
 
-import com.ing.api.ProductRequestJson;
+import com.ing.api.product.ProductRequestJson;
 import com.ing.domain.Product;
 import com.ing.domain.ProductWarehouse;
 import com.ing.domain.Warehouse;

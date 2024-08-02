@@ -1,8 +1,8 @@
 package com.ing.controller;
 
 import com.ing.TestBase;
-import com.ing.api.ProductListResponse;
-import com.ing.api.ProductResponseJson;
+import com.ing.api.product.ProductListResponseJson;
+import com.ing.api.product.ProductResponseJson;
 import com.ing.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class ProductControllerTest extends TestBase {
     private ProductService productService;
 
     private ProductResponseJson testProductResponseJson;
-    private ProductListResponse testProductListResponse;
+    private ProductListResponseJson testProductListResponse;
 
     @BeforeEach
     public void setup() {
@@ -45,7 +45,7 @@ public class ProductControllerTest extends TestBase {
                 .setPrice(TEST_PRODUCT_PRICE)
                 .setCategory(TEST_CATEGORY_NAME);
 
-        testProductListResponse = new ProductListResponse().setProducts(List.of(testProductResponseJson));
+        testProductListResponse = new ProductListResponseJson().setProducts(List.of(testProductResponseJson));
 
         when(productService.getAllProducts()).thenReturn(testProductListResponse);
         when(productService.getProduct(TEST_PRODUCT_ID)).thenReturn(testProductResponseJson);
