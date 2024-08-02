@@ -8,6 +8,7 @@ import com.ing.service.WarehouseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,22 +29,26 @@ public class WarehouseController {
     }
 
     @GetMapping("/{warehouseId}/with-products")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public WarehouseWithProductResponseJson getWarehouseWithProducts(@PathVariable Long warehouseId) {
         return warehouseService.getWarehouseWithProducts(warehouseId);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public WarehouseResponseJson createWarehouse(@RequestBody @Valid WarehouseRequestJson warehouseRequest) {
         return warehouseService.createWarehouse(warehouseRequest);
     }
 
     @PutMapping("/{warehouseId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public WarehouseResponseJson updateWarehouse(@PathVariable Long warehouseId,
                                                  @RequestBody @Valid WarehouseRequestJson warehouseRequest) {
         return warehouseService.updateWarehouse(warehouseId, warehouseRequest);
     }
 
     @DeleteMapping("/{warehouseId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteWarehouse(@PathVariable Long warehouseId) {
         warehouseService.deleteWarehouse(warehouseId);
         return ResponseEntity.noContent().build();
