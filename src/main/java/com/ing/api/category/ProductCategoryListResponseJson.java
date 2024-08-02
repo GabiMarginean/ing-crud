@@ -2,9 +2,10 @@ package com.ing.api.category;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ProductCategoryListResponseJson {
+public class ProductCategoryListResponseJson implements Serializable {
 
     @JsonUnwrapped
     private List<ProductCategoryResponseJson> categories;

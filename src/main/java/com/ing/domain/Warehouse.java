@@ -3,7 +3,6 @@ package com.ing.domain;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 @Entity
@@ -56,28 +55,6 @@ public class Warehouse {
 
     public Warehouse setProductWarehouses(Set<ProductWarehouse> productWarehouses) {
         this.productWarehouses = productWarehouses;
-        return this;
-    }
-
-    public Warehouse addProduct(Product product, long quantity) {
-        ProductWarehouse productWarehouse = new ProductWarehouse(product, this, quantity);
-        productWarehouses.add(productWarehouse);
-        product.getProductWarehouses().add(productWarehouse);
-        return this;
-    }
-
-    public Warehouse removeProduct(Product product) {
-        for (Iterator<ProductWarehouse> iterator = productWarehouses.iterator(); iterator.hasNext(); ) {
-            ProductWarehouse productWarehouse = iterator.next();
-
-            if (productWarehouse.getWarehouse().equals(this) &&
-                    productWarehouse.getProduct().equals(product)) {
-                iterator.remove();
-                productWarehouse.getWarehouse().getProductWarehouses().remove(productWarehouse);
-                productWarehouse.setProduct(null);
-                productWarehouse.setWarehouse(null);
-            }
-        }
         return this;
     }
 }

@@ -2,9 +2,10 @@ package com.ing.api.warehouse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class WarehouseWithProductResponseJson {
+public class WarehouseWithProductResponseJson implements Serializable {
 
     @JsonProperty("id")
     private Long id;

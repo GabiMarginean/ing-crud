@@ -35,12 +35,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService),
-                        UsernamePasswordAuthenticationFilter.class)
-                .securityContext(securityContext -> securityContext.
-                        securityContextRepository(new HttpSessionSecurityContextRepository()));
+                        .anyRequest().authenticated())
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .securityContext(securityContext -> securityContext.securityContextRepository(new HttpSessionSecurityContextRepository()));
 
         return http.build();
     }

@@ -2,7 +2,9 @@ package com.ing.api.category;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ProductCategoryResponseJson {
+import java.io.Serializable;
+
+public class ProductCategoryResponseJson implements Serializable {
 
     @JsonProperty("id")
     private Long id;

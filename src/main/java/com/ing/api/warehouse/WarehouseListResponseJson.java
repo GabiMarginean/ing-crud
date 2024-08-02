@@ -2,9 +2,10 @@ package com.ing.api.warehouse;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class WarehouseListResponseJson {
+public class WarehouseListResponseJson implements Serializable {
 
     @JsonUnwrapped
     private List<WarehouseResponseJson> warehouses;

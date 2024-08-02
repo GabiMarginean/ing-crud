@@ -46,3 +46,14 @@ CREATE TABLE product_warehouse
     FOREIGN KEY (product_id) REFERENCES product (id),
     FOREIGN KEY (warehouse_id) REFERENCES warehouse (id)
 );
+
+INSERT INTO product_category (name)
+VALUES
+    ('category_1'),
+    ('category_2'),
+    ('category_3');
+
+INSERT INTO `user` (username, password, role)
+VALUES
+    ('admin', '$2a$10$YAl.Z5XWuwZK/df.ComRHOVx3cNdMb/lO4xD/izVAxyCvqOJfND1y', 'ADMIN'),
+    ('observer', '$2a$10$peGInE6C6babNAGxLEZMrOSWnBhDHiRhEUOBY4L5P01I1qmcDQNeC', 'OBSERVER');

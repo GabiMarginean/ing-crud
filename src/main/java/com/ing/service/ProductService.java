@@ -23,18 +23,18 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static com.ing.common.Constants.PRODUCT_ENTITY;
+import static com.ing.common.Constants.WAREHOUSE_ENTITY;
+
 @Service
 public class ProductService {
 
-    public static final String WAREHOUSE_ENTITY = "Warehouse";
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
     @Autowired
     private WarehouseRepository warehouseRepository;
-
-    public static final String PRODUCT_ENTITY = "Product";
 
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 

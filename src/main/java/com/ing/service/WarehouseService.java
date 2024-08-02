@@ -19,10 +19,11 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static com.ing.common.Constants.WAREHOUSE_ENTITY;
+
 @Service
 public class WarehouseService {
 
-    public static final String WAREHOUSE_ENTITY = "Warehouse";
     @Autowired
     private WarehouseRepository warehouseRepository;
 
