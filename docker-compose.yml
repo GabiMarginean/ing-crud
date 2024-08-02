@@ -1,0 +1,34 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8.0.26
+    environment:
+      MYSQL_ROOT_PASSWORD: doyourthing
+      MYSQL_DATABASE: ing_crud
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  redis:
+    image: redis:5.0-alpine
+    command: redis-server --requirepass doyourthing
+    ports:
+      - "6379:6379"
+
+  app:
+    image: ing-crud-image
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ing_crud
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: doyourthing
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PASSWORD: doyourthing
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+
+volumes:
+  db-data:
