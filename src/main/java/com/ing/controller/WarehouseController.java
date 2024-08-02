@@ -3,6 +3,7 @@ package com.ing.controller;
 import com.ing.api.warehouse.WarehouseListResponseJson;
 import com.ing.api.warehouse.WarehouseRequestJson;
 import com.ing.api.warehouse.WarehouseResponseJson;
+import com.ing.api.warehouse.WarehouseWithProductResponseJson;
 import com.ing.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,11 @@ public class WarehouseController {
     @GetMapping("/{warehouseId}")
     public WarehouseResponseJson getWarehouse(@PathVariable Long warehouseId) {
         return warehouseService.getWarehouse(warehouseId);
+    }
+
+    @GetMapping("/{warehouseId}/with-products")
+    public WarehouseWithProductResponseJson getWarehouseWithProducts(@PathVariable Long warehouseId) {
+        return warehouseService.getWarehouseWithProducts(warehouseId);
     }
 
     @PostMapping

@@ -1,14 +1,15 @@
 package com.ing.service;
 
-import com.ing.api.product.PriceUpdateRequestJson;
-import com.ing.api.product.ProductListResponseJson;
-import com.ing.api.product.ProductRequestJson;
-import com.ing.api.product.ProductResponseJson;
+import com.ing.api.product.*;
 import com.ing.domain.Product;
 import com.ing.domain.ProductCategory;
+import com.ing.domain.ProductWarehouse;
+import com.ing.domain.Warehouse;
 import com.ing.error.ErrorCode;
 import com.ing.repository.ProductCategoryRepository;
 import com.ing.repository.ProductRepository;
+import com.ing.repository.WarehouseRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
+    @Autowired
+    private WarehouseRepository warehouseRepository;
 
     public static final String PRODUCT_ENTITY = "Product";
 
@@ -68,8 +71,31 @@ public class ProductService {
 
         productRepository.save(product);
 
-        // Convert to response JSON (assuming you have a method for this)
         return toJsonResponse(product);
+    }
+
+    @Transactional
+    public ProductAssignWarehouseResponseJson assignProductToWarehouse(Long productId, ProductAssignWarehouseJsonListRequest assignRequest) {
+        Product product = retrieveProduct(productId);
+        List<ProductAssignWarehouseJsonRequest> assignRequests = assignRequest.getAssignRequests();
+        assignRequests.forEach(request -> processAssignToWarehouse(product, request));
+
+        return toJsonWithWarehousesResponse(productRepository.save(product));
+    }
+
+    private void processAssignToWarehouse(Product product, ProductAssignWarehouseJsonRequest request) {
+        Warehouse warehouse = retrieveWarehouse(request.getWarehouseId());
+        Long usedStorage = warehouseRepository.countProductsInWarehouse(request.getWarehouseId());
+        Long remainingStorage = warehouse.getCapacity() - usedStorage;
+
+        if (remainingStorage < request.getQuantity()) {
+            logger.warn("Could not assign product {} to warehouse {}: Exceeded capacity actual {}, required {}",
+                    product.getId(), request.getWarehouseId(), remainingStorage, request.getQuantity());
+            throw new RuntimeException(MessageFormat.format(ErrorCode.WAREHOUSE_NOT_ENOUGH_STORAGE.getMessage(),
+                    request.getWarehouseId(), request.getQuantity(), remainingStorage));
+        }
+
+        product.assignToWarehouse(warehouse, request.getQuantity());
     }
 
     private Product retrieveProduct(Long productId) {
@@ -77,6 +103,14 @@ public class ProductService {
                 () -> {
                     logger.warn("Tried to retrieve invalid product with id: {}", productId);
                     return new RuntimeException(MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), PRODUCT_ENTITY, productId));
+                });
+    }
+
+    private Warehouse retrieveWarehouse(Long productId) {
+        return warehouseRepository.findById(productId).orElseThrow(
+                () -> {
+                    logger.warn("Tried to retrieve invalid warehouse with id: {}", productId);
+                    return new RuntimeException(MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), "Warehousee", productId));
                 });
     }
 
@@ -97,6 +131,25 @@ public class ProductService {
                 .setCategory(product.getCategory().getName());
     }
 
+    private ProductAssignWarehouseResponseJson toJsonWithWarehousesResponse(Product product) {
+        return new ProductAssignWarehouseResponseJson()
+                .setId(product.getId())
+                .setName(product.getName())
+                .setDescription(product.getDescription())
+                .setPrice(product.getPrice())
+                .setCategory(product.getCategory().getName())
+                .setWarehouses(product.getProductWarehouses()
+                        .stream()
+                        .map(this::toProductWarehouseResponseJson)
+                        .toList());
+    }
+
+    private ProductWarehouseResponseJson toProductWarehouseResponseJson(ProductWarehouse productWarehouse) {
+        return new ProductWarehouseResponseJson()
+                .setWarehouseId(productWarehouse.getWarehouse().getId())
+                .setQuantity(productWarehouse.getQuantity());
+    }
+
     private ProductListResponseJson getProductListResponse(List<Product> allProducts) {
         return new ProductListResponseJson()
                 .setProducts(allProducts.stream()
@@ -110,6 +163,5 @@ public class ProductService {
                 .setDescription(product.getDescription())
                 .setPrice(product.getPrice());
     }
-
 
 }

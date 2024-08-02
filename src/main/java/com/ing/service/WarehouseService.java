@@ -1,8 +1,8 @@
 package com.ing.service;
 
-import com.ing.api.warehouse.WarehouseListResponseJson;
-import com.ing.api.warehouse.WarehouseRequestJson;
-import com.ing.api.warehouse.WarehouseResponseJson;
+import com.ing.api.warehouse.*;
+import com.ing.domain.Product;
+import com.ing.domain.ProductWarehouse;
 import com.ing.domain.Warehouse;
 import com.ing.error.ErrorCode;
 import com.ing.repository.WarehouseRepository;
@@ -30,6 +30,37 @@ public class WarehouseService {
     public WarehouseResponseJson getWarehouse(Long warehouseId) {
         Warehouse warehouse = retrieveWarehouse(warehouseId);
         return toJsonResponse(warehouse);
+    }
+
+    public WarehouseWithProductResponseJson getWarehouseWithProducts(Long warehouseId) {
+        Warehouse warehouse = warehouseRepository.findWithProductsById(warehouseId);
+        Long usedCapacity = warehouse.getProductWarehouses().stream()
+                .mapToLong(ProductWarehouse::getQuantity)
+                .sum();
+
+        return getResponseWithProducts(warehouse, usedCapacity);
+    }
+
+    private WarehouseWithProductResponseJson getResponseWithProducts(Warehouse warehouse, Long usedCapacity) {
+        return new WarehouseWithProductResponseJson()
+                .setId(warehouse.getId())
+                .setAddress(warehouse.getAddress())
+                .setCapacity(warehouse.getCapacity())
+                .setRemainingCapacity(warehouse.getCapacity() - usedCapacity)
+                .setProducts(warehouse.getProductWarehouses()
+                        .stream()
+                        .map(this::getProductWarehouseJsonResponse)
+                        .toList());
+
+    }
+
+
+    private WarehouseProductJsonResponse getProductWarehouseJsonResponse(ProductWarehouse productWarehouse) {
+        Product product = productWarehouse.getProduct();
+        return new WarehouseProductJsonResponse()
+                .setId(product.getId())
+                .setName(product.getName())
+                .setQuantity(productWarehouse.getQuantity());
     }
 
     public WarehouseResponseJson createWarehouse(WarehouseRequestJson warehouseRequest) {

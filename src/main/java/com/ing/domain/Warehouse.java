@@ -20,7 +20,7 @@ public class Warehouse {
     @Column(name = "capacity", nullable = false)
     private Long capacity;
 
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY)
     private Set<ProductWarehouse> productWarehouses = new HashSet<>();
 
     public Long getId() {

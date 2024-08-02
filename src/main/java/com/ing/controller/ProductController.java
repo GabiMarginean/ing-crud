@@ -1,9 +1,6 @@
 package com.ing.controller;
 
-import com.ing.api.product.PriceUpdateRequestJson;
-import com.ing.api.product.ProductListResponseJson;
-import com.ing.api.product.ProductRequestJson;
-import com.ing.api.product.ProductResponseJson;
+import com.ing.api.product.*;
 import com.ing.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,5 +46,11 @@ public class ProductController {
     public ProductResponseJson updateProductPrice(@PathVariable Long productId,
                                                   @RequestBody PriceUpdateRequestJson priceUpdateRequest) {
         return productService.updateProductPrice(productId, priceUpdateRequest);
+    }
+
+    @PostMapping("/{productId}/assign-warehouse")
+    public ProductAssignWarehouseResponseJson assignToWarehouse(@PathVariable Long productId,
+                                                                @RequestBody ProductAssignWarehouseJsonListRequest assignRequest) {
+        return productService.assignProductToWarehouse(productId, assignRequest);
     }
 }

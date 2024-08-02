@@ -84,11 +84,21 @@ public class Product {
     }
 
     public Product assignToWarehouse(Warehouse warehouse, long quantity) {
+        // Check if the relationship already exists
+        for (ProductWarehouse productWarehouse : productWarehouses) {
+            if (productWarehouse.getProduct().equals(this) && productWarehouse.getWarehouse().equals(warehouse)) {
+                // Update the quantity if it already exists
+                productWarehouse.setQuantity(quantity);
+                return this;
+            }
+        }
+        // If not, create a new relationship
         ProductWarehouse productWarehouse = new ProductWarehouse(this, warehouse, quantity);
         productWarehouses.add(productWarehouse);
         warehouse.getProductWarehouses().add(productWarehouse);
         return this;
     }
+
 
     public Product removeFromWarehouse(Warehouse warehouse) {
         for (Iterator<ProductWarehouse> iterator = productWarehouses.iterator(); iterator.hasNext(); ) {
