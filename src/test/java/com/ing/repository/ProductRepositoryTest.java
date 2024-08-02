@@ -1,5 +1,6 @@
 package com.ing.repository;
 
+import com.ing.TestBase;
 import com.ing.domain.Product;
 import com.ing.domain.ProductCategory;
 import com.ing.domain.Warehouse;

@@ -23,7 +23,7 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private ProductCategory category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

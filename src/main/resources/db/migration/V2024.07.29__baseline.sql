@@ -1,7 +1,7 @@
 CREATE TABLE `user`
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-    username      VARCHAR(255),
+    username      VARCHAR(255) UNIQUE,
     password      VARCHAR(255),
     role          VARCHAR(25),
     created       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -11,7 +11,7 @@ CREATE TABLE `user`
 CREATE TABLE product_category
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name          VARCHAR(50) NOT NULL,
+    name          VARCHAR(50) NOT NULL UNIQUE,
     created       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

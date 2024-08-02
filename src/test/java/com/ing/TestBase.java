@@ -1,5 +1,6 @@
-package com.ing.repository;
+package com.ing;
 
+import com.ing.api.ProductRequestJson;
 import com.ing.domain.Product;
 import com.ing.domain.ProductWarehouse;
 import com.ing.domain.Warehouse;
@@ -43,5 +44,17 @@ public class TestBase {
     protected void assertWarehouse(Warehouse w) {
         assertEquals(TEST_WAREHOUSE_ADDRESS, w.getAddress());
         assertEquals(TEST_WAREHOUSE_CAPACITY, w.getCapacity());
+    }
+
+    protected ProductRequestJson getRequestJson() {
+        return getRequestJson(TEST_CATEGORY_NAME);
+    }
+
+    protected ProductRequestJson getRequestJson(String categoryName) {
+        return new ProductRequestJson().setName(TEST_PRODUCT_NAME)
+                .setDescription(TEST_PRODUCT_DESCRIPTION)
+                .setPrice(TEST_PRODUCT_PRICE)
+                .setCategory(categoryName);
+
     }
 }
