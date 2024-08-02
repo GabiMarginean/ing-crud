@@ -5,6 +5,7 @@ import com.ing.domain.Product;
 import com.ing.domain.ProductCategory;
 import com.ing.domain.ProductWarehouse;
 import com.ing.domain.Warehouse;
+import com.ing.error.CustomException;
 import com.ing.error.ErrorCode;
 import com.ing.repository.ProductCategoryRepository;
 import com.ing.repository.ProductRepository;
@@ -21,6 +22,7 @@ import java.util.List;
 @Service
 public class ProductService {
 
+    public static final String WAREHOUSE_ENTITY = "Warehouse";
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -91,8 +93,8 @@ public class ProductService {
         if (remainingStorage < request.getQuantity()) {
             logger.warn("Could not assign product {} to warehouse {}: Exceeded capacity actual {}, required {}",
                     product.getId(), request.getWarehouseId(), remainingStorage, request.getQuantity());
-            throw new RuntimeException(MessageFormat.format(ErrorCode.WAREHOUSE_NOT_ENOUGH_STORAGE.getMessage(),
-                    request.getWarehouseId(), request.getQuantity(), remainingStorage));
+            throw new CustomException(ErrorCode.WAREHOUSE_NOT_ENOUGH_STORAGE.getCode(),
+                    MessageFormat.format(ErrorCode.WAREHOUSE_NOT_ENOUGH_STORAGE.getMessage(), request.getWarehouseId(), request.getQuantity(), remainingStorage));
         }
 
         product.assignToWarehouse(warehouse, request.getQuantity());
@@ -102,7 +104,8 @@ public class ProductService {
         return productRepository.findById(productId).orElseThrow(
                 () -> {
                     logger.warn("Tried to retrieve invalid product with id: {}", productId);
-                    return new RuntimeException(MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), PRODUCT_ENTITY, productId));
+                    return new CustomException(ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                            MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), PRODUCT_ENTITY, productId));
                 });
     }
 
@@ -110,7 +113,8 @@ public class ProductService {
         return warehouseRepository.findById(productId).orElseThrow(
                 () -> {
                     logger.warn("Tried to retrieve invalid warehouse with id: {}", productId);
-                    return new RuntimeException(MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), "Warehousee", productId));
+                    return new CustomException(ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                            MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), WAREHOUSE_ENTITY, productId));
                 });
     }
 
@@ -118,7 +122,8 @@ public class ProductService {
         return productCategoryRepository.findByName(productJson.getCategory()).orElseThrow(
                 () -> {
                     logger.warn("Tried to retrieve invalid product category: {}", productJson.getCategory());
-                    return new RuntimeException(MessageFormat.format(ErrorCode.INVALID_CATEGORY.getMessage(), productJson.getCategory()));
+                    return new CustomException(ErrorCode.INVALID_CATEGORY.getCode(),
+                            MessageFormat.format(ErrorCode.INVALID_CATEGORY.getMessage(), productJson.getCategory()));
                 });
     }
 

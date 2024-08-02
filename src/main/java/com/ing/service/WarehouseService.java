@@ -4,6 +4,7 @@ import com.ing.api.warehouse.*;
 import com.ing.domain.Product;
 import com.ing.domain.ProductWarehouse;
 import com.ing.domain.Warehouse;
+import com.ing.error.CustomException;
 import com.ing.error.ErrorCode;
 import com.ing.repository.WarehouseRepository;
 import org.slf4j.Logger;
@@ -83,7 +84,8 @@ public class WarehouseService {
         return warehouseRepository.findById(warehouseId).orElseThrow(
                 () -> {
                     logger.warn("Tried to retrieve invalid warehouse with id: {}", warehouseId);
-                    return new RuntimeException(MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), WAREHOUSE_ENTITY, warehouseId));
+                    return new CustomException(ErrorCode.ENTITY_NOT_FOUND.getCode(),
+                            MessageFormat.format(ErrorCode.ENTITY_NOT_FOUND.getMessage(), WAREHOUSE_ENTITY, warehouseId));
                 });
     }
 

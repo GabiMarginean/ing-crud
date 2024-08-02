@@ -5,6 +5,7 @@ import com.ing.api.warehouse.WarehouseRequestJson;
 import com.ing.api.warehouse.WarehouseResponseJson;
 import com.ing.api.warehouse.WarehouseWithProductResponseJson;
 import com.ing.service.WarehouseService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,13 @@ public class WarehouseController {
     }
 
     @PostMapping
-    public WarehouseResponseJson createWarehouse(@RequestBody WarehouseRequestJson warehouseRequest) {
+    public WarehouseResponseJson createWarehouse(@RequestBody @Valid WarehouseRequestJson warehouseRequest) {
         return warehouseService.createWarehouse(warehouseRequest);
     }
 
     @PutMapping("/{warehouseId}")
     public WarehouseResponseJson updateWarehouse(@PathVariable Long warehouseId,
-                                                 @RequestBody WarehouseRequestJson warehouseRequest) {
+                                                 @RequestBody @Valid WarehouseRequestJson warehouseRequest) {
         return warehouseService.updateWarehouse(warehouseId, warehouseRequest);
     }
 

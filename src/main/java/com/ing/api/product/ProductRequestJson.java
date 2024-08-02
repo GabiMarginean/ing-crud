@@ -1,19 +1,26 @@
 package com.ing.api.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class ProductRequestJson {
 
     @JsonProperty("name")
+    @NotBlank(message = "name is required")
     private String name;
 
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("price")
+    @NotNull(message = "price is required")
+    @Positive(message = "price must be greater than zero")
     private Double price;
 
     @JsonProperty("category")
+    @NotBlank(message = "category is mandatory")
     private String category;
 
     public String getName() {

@@ -2,6 +2,7 @@ package com.ing.controller;
 
 import com.ing.api.product.*;
 import com.ing.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductResponseJson createProduct(@RequestBody ProductRequestJson productJson) {
+    public ProductResponseJson createProduct(@RequestBody @Valid ProductRequestJson productJson) {
         return productService.createProduct(productJson);
     }
 
     @PutMapping("/{productId}")
     public ProductResponseJson updateProduct(@PathVariable Long productId,
-                                             @RequestBody ProductRequestJson productJson) {
+                                             @RequestBody @Valid ProductRequestJson productJson) {
         return productService.updateProduct(productJson, productId);
     }
 
@@ -44,13 +45,13 @@ public class ProductController {
     @PatchMapping("/{productId}/price")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponseJson updateProductPrice(@PathVariable Long productId,
-                                                  @RequestBody PriceUpdateRequestJson priceUpdateRequest) {
+                                                  @RequestBody @Valid PriceUpdateRequestJson priceUpdateRequest) {
         return productService.updateProductPrice(productId, priceUpdateRequest);
     }
 
     @PostMapping("/{productId}/assign-warehouse")
     public ProductAssignWarehouseResponseJson assignToWarehouse(@PathVariable Long productId,
-                                                                @RequestBody ProductAssignWarehouseJsonListRequest assignRequest) {
+                                                                @RequestBody @Valid ProductAssignWarehouseJsonListRequest assignRequest) {
         return productService.assignProductToWarehouse(productId, assignRequest);
     }
 }

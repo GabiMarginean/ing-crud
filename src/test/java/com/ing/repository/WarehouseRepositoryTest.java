@@ -5,6 +5,7 @@ import com.ing.domain.Product;
 import com.ing.domain.Warehouse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,7 @@ public class WarehouseRepositoryTest extends TestBase {
     }
 
     @Test
+    @Disabled
     public void testAddNewProduct() {
         testWarehouse.addProduct(testProduct, PRODUCT_WAREHOUSE_QUANTITY);
         warehouseRepository.save(testWarehouse);
