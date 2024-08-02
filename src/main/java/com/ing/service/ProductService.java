@@ -14,6 +14,10 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -34,18 +38,22 @@ public class ProductService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
+    @Cacheable(value = "products", key = "'allProducts'")
     public ProductListResponseJson getAllProducts() {
         List<Product> allProducts = productRepository.findAll();
 
         return getProductListResponse(allProducts);
     }
 
+    @Cacheable(value = "products", key = "#productId")
     public ProductResponseJson getProduct(Long productId) {
         Product product = retrieveProduct(productId);
 
         return toJsonResponse(product);
     }
 
+    @CachePut(value = "products", key = "#result.id")
+    @CacheEvict(value = "products", key = "'allProducts'")
     public ProductResponseJson createProduct(ProductRequestJson productJson) {
         ProductCategory productCategory = retrieveProductCategory(productJson);
         Product product = toEntity(productJson).setCategory(productCategory);
@@ -53,6 +61,8 @@ public class ProductService {
         return toJsonResponse(productRepository.save(product));
     }
 
+    @CachePut(value = "products", key = "#productJson.id")
+    @CacheEvict(value = "products", key = "'allProducts'")
     public ProductResponseJson updateProduct(ProductRequestJson productJson, Long productId) {
         retrieveProduct(productId);
         ProductCategory productCategory = retrieveProductCategory(productJson);
@@ -62,11 +72,17 @@ public class ProductService {
         return toJsonResponse(productRepository.save(product));
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products", key = "#productId"),
+            @CacheEvict(value = "products", key = "'allProducts'")
+    })
     public void deleteProduct(Long productId) {
         Product product = retrieveProduct(productId);
         productRepository.delete(product);
     }
 
+    @CachePut(value = "products", key = "#productId")
+    @CacheEvict(value = "products", key = "'allProducts'")
     public ProductResponseJson updateProductPrice(Long productId, PriceUpdateRequestJson priceUpdateRequest) {
         Product product = retrieveProduct(productId);
         product.setPrice(priceUpdateRequest.getPrice());

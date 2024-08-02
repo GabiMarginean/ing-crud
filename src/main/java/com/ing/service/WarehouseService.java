@@ -10,6 +10,10 @@ import com.ing.repository.WarehouseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -24,10 +28,12 @@ public class WarehouseService {
 
     private static final Logger logger = LoggerFactory.getLogger(WarehouseService.class);
 
+    @Cacheable(value = "warehouses", key = "'allWarehouses'")
     public WarehouseListResponseJson getAllWarehouses() {
         return getListResponse(warehouseRepository.findAll());
     }
 
+    @Cacheable(value = "warehouses", key = "#warehouseId")
     public WarehouseResponseJson getWarehouse(Long warehouseId) {
         Warehouse warehouse = retrieveWarehouse(warehouseId);
         return toJsonResponse(warehouse);
@@ -40,6 +46,30 @@ public class WarehouseService {
                 .sum();
 
         return getResponseWithProducts(warehouse, usedCapacity);
+    }
+
+    @CachePut(value = "warehouses", key = "#result.id")
+    @CacheEvict(value = "warehouses", key = "'allWarehouses'")
+    public WarehouseResponseJson createWarehouse(WarehouseRequestJson warehouseRequest) {
+        Warehouse warehouse = toEntity(warehouseRequest);
+        return toJsonResponse(warehouseRepository.save(warehouse));
+    }
+
+    @CachePut(value = "warehouses", key = "#warehouseId.id")
+    @CacheEvict(value = "warehouses", key = "'allWarehouses'")
+    public WarehouseResponseJson updateWarehouse(Long warehouseId, WarehouseRequestJson warehouseRequest) {
+        retrieveWarehouse(warehouseId);
+        Warehouse warehouse = toEntity(warehouseRequest).setId(warehouseId);
+        return toJsonResponse(warehouseRepository.save(warehouse));
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = "warehouses", key = "#warehouseId"),
+            @CacheEvict(value = "warehouses", key = "'allWarehouses'")
+    })
+    public void deleteWarehouse(Long warehouseId) {
+        Warehouse warehouse = retrieveWarehouse(warehouseId);
+        warehouseRepository.delete(warehouse);
     }
 
     private WarehouseWithProductResponseJson getResponseWithProducts(Warehouse warehouse, Long usedCapacity) {
@@ -55,29 +85,12 @@ public class WarehouseService {
 
     }
 
-
     private WarehouseProductJsonResponse getProductWarehouseJsonResponse(ProductWarehouse productWarehouse) {
         Product product = productWarehouse.getProduct();
         return new WarehouseProductJsonResponse()
                 .setId(product.getId())
                 .setName(product.getName())
                 .setQuantity(productWarehouse.getQuantity());
-    }
-
-    public WarehouseResponseJson createWarehouse(WarehouseRequestJson warehouseRequest) {
-        Warehouse warehouse = toEntity(warehouseRequest);
-        return toJsonResponse(warehouseRepository.save(warehouse));
-    }
-
-    public WarehouseResponseJson updateWarehouse(Long warehouseId, WarehouseRequestJson warehouseRequest) {
-        retrieveWarehouse(warehouseId);
-        Warehouse warehouse = toEntity(warehouseRequest).setId(warehouseId);
-        return toJsonResponse(warehouseRepository.save(warehouse));
-    }
-
-    public void deleteWarehouse(Long warehouseId) {
-        Warehouse warehouse = retrieveWarehouse(warehouseId);
-        warehouseRepository.delete(warehouse);
     }
 
     private Warehouse retrieveWarehouse(Long warehouseId) {
